@@ -12,6 +12,6 @@ class Department extends Model
 
     public function employees()
     {
-        return $this->hasMany('App\Employee');
+        return $this->belongsTo('App\Employee');
     }
 }
