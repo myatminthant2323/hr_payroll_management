@@ -15,19 +15,20 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('emp_name')->nullable();
-            $table->string('email')->nullable()->unique();
-            $table->string('address')->nullable();
-            $table->string('phno')->nullable();
+            $table->string('emp_name');
+            $table->string('email')->unique();
+            $table->string('address');
+            $table->string('phno1');
+            $table->string('phno2')->nullable();
             $table->unsignedBigInteger('department_id');
             $table->unsignedBigInteger('designation_id');
-            $table->dateTime('join_date')->nullable();
-            $table->decimal('basic_salary')->nullable();
-            $table->time('basic_working_time_per_day')->nullable();
-            $table->decimal('medical_allowance');
-            $table->decimal('transport_allowance');
-            $table->decimal('accomodation_allowance');
-            $table->integer('leave_allowance_per_year');
+            $table->dateTime('join_date');
+            $table->decimal('basic_salary');
+            $table->time('basic_working_time_per_day');
+            $table->decimal('medical_allowance')->nullable();
+            $table->decimal('transport_allowance')->nullable();
+            $table->decimal('accomodation_allowance')->nullable();
+            $table->integer('leave_allowance_per_year')->nullable();
             $table->timestamps();
 
             $table->foreign('department_id')

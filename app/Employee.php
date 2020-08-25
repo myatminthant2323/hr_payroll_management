@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Employee extends Model
 {
     protected $fillable = [
-        'emp_name', 'email', 'address', 'phno', 'department_id', 'designation_id', 'join_date', 'basic_salary', 'basic_working_time_per_day', 'medical_allowance', 'transport_allowance', 'accomodation_allowance', 'leave_allowance_per_year',
+        'emp_name', 'email', 'address', 'phno1', 'phno2', 'date_of_birth', 'gender', 'martial_status', 'department_id', 'designation_id', 'join_date', 'basic_salary', 'basic_working_time_per_day', 'medical_allowance', 'transport_allowance', 'accomodation_allowance', 'leave_allowance_per_year',
     ];
 
     public function leaves()
