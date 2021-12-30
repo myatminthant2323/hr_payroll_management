@@ -15,20 +15,21 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('emp_name');
+            $table->unsignedBigInteger('user_id');
+            $table->text('photo');
+            $table->string('fname');
+            $table->string('lname');
+            $table->string('username');
             $table->string('email')->unique();
             $table->string('address');
             $table->string('phno1');
             $table->string('phno2')->nullable();
+            $table->date('date_of_birth');
+            $table->string('gender');
+            $table->string('martial_status');
             $table->unsignedBigInteger('department_id');
             $table->unsignedBigInteger('designation_id');
-            $table->dateTime('join_date');
-            $table->decimal('basic_salary');
-            $table->time('basic_working_time_per_day');
-            $table->decimal('medical_allowance')->nullable();
-            $table->decimal('transport_allowance')->nullable();
-            $table->decimal('accomodation_allowance')->nullable();
-            $table->integer('leave_allowance_per_year')->nullable();
+            $table->date('join_date');
             $table->timestamps();
 
             $table->foreign('department_id')
@@ -38,6 +39,10 @@ class CreateEmployeesTable extends Migration
             $table->foreign('designation_id')
                   ->references('id')->on('designations')
                   ->onDelete('cascade');
+
+            $table->foreign('user_id')
+                  ->references('id')->on('users')
+                  ->onDelete('cascade'); 
         });
     }
 

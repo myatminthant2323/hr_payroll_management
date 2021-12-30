@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,7 +25,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+             // DB::table('payrolls')->delete();
+            DB::table('overtimes')->whereDate('overtime_date', '<=', \Carbon\Carbon::today())->where('status','=','1')->update(['status' => '0']);
+
+            DB::table('leaves')->whereDate('leave_date', '<=', \Carbon\Carbon::today())->where('status','=','0')->update(['status' => '2']);
+        })->everyMinute();
     }
 
     /**

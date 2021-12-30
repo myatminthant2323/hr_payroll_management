@@ -5,9 +5,11 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
+    use HasRoles;
     use Notifiable;
 
     /**
@@ -37,8 +39,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function payments()
+    public function payrolls()
     {
-        return $this->hasMany('App\Payment');
+        return $this->hasMany('App\Payroll');
+    }
+
+    public function employees()
+    {
+        return $this->hasMany('App\Employee');
+    }
+
+    public function overtimes()
+    {
+        return $this->hasMany('App\Overtime');
+    }
+
+    public function leaves()
+    {
+        return $this->hasMany('App\Leave');
     }
 }

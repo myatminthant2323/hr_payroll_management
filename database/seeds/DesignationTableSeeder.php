@@ -11,6 +11,6 @@ class DesignationTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Department::class, 5)->create();
+        factory(\App\Designation::class, 2)->create();
     }
 }

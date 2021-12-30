@@ -19,7 +19,7 @@ class CreateAttendancesTable extends Migration
             $table->date('working_date');
             $table->time('in_time');
             $table->time('out_time');
-            $table->time('overtime_hour')->nullable();
+            $table->float('overtime_hour')->nullable();
             $table->timestamps();
 
             $table->foreign('employee_id')

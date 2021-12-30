@@ -1,0 +1,232 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Designation;
+use App\Employee;
+use App\Payroll;
+use App\Salary;
+use App\Overtime;
+class PayrollController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $employees = Employee::all();
+        // $designations = Designation::all();
+        $salaries = Salary::all();
+        $payrolls = Payroll::all();
+        return view('backend.payrolls.index',compact('employees','salaries','payrolls'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $employees = Employee::all();
+        // $designations = Designation::all();
+        // $salaries = Salary::all();
+        // $payrolls = Payroll::all();
+        return view('backend.payrolls.create',compact('employees'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'payment_month' => 'required',
+            'payment_date' => 'required',
+        ]);
+        
+        $payroll = new Payroll;
+
+        // $net_salary = Salary::select('net_salary')
+        //                             ->where('employee_id', $payroll->employee_id)->get();
+        $total_bonus = $request->overtime_bonus + $request->attendance_bonus + $request->other_bonus;
+        $total_deduction = $request->attendance_deduction + $request->other_deduction;
+        $net_pay = $request->net_salary + $total_bonus - $total_deduction;
+
+        
+        $payroll->user_id = 1;
+        $payroll->employee_id = $request->staff;
+        $payroll->payment_month = $request->payment_month;
+        $payroll->payment_date = $request->payment_date;
+        $payroll->overtime_bonus = $request->overtime_bonus;
+        $payroll->attendance_bonus = $request->attendance_bonus  ;
+        $payroll->other_bonus = $request->other_bonus;
+        $payroll->attendance_deduction = $request->attendance_deduction;
+        $payroll->other_deduction = $request->other_deduction;
+        $payroll->total_bonus = $total_bonus;
+        $payroll->total_deduction = $total_deduction;
+        $payroll->net_pay = $net_pay;
+
+        
+
+        $payroll->save();
+
+        // Alert::success('Success!', 'New Item Inserted Successfully.');
+
+        return redirect()->route('payrolls.index');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $payroll = Payroll::findOrFail($id);
+
+        $salary = Salary::where([
+            ['employee_id', '=', $payroll->employee_id],
+            ['deleted_at', '=', null]])->get();
+        $employee = Employee::where('id', $payroll->employee_id)->get();
+        dd($salary->id);
+        $designation = Designation::where('id', $employee->designation_id)->get();
+        return view('backend.payrolls.show',compact('payroll','salary','employee','designation'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $payroll = Payroll::find($id);
+        $salary = Salary::where('employee_id', $payroll->employee_id)->get();
+        // $employee = Employee::where('id', $payroll->employee_id)->get();
+        $employees = Employee::all();
+        // $designations = Designation::all();
+        
+        // $salaries = Salary::all();
+        
+        return view('backend.payrolls.edit',compact('payroll','salary','employees'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'payment_month' => 'required',
+            'payment_date' => 'required',
+        ]);
+        $payroll = Payroll::find($id);
+
+        $total_bonus = $request->overtime_bonus + $request->attendance_bonus + $request->other_bonus;
+        $total_deduction = $request->attendance_deduction + $request->other_deduction;
+        $net_pay = $request->net_salary + $total_bonus - $total_deduction;
+
+        
+        $payroll->user_id = 1;
+        $payroll->employee_id = $request->staff;
+        $payroll->payment_month = $request->payment_month;
+        $payroll->payment_date = $request->payment_date;
+        $payroll->overtime_bonus = $request->overtime_bonus;
+        $payroll->attendance_bonus = $request->attendance_bonus  ;
+        $payroll->other_bonus = $request->other_bonus;
+        $payroll->attendance_deduction = $request->attendance_deduction;
+        $payroll->other_deduction = $request->other_deduction;
+        $payroll->total_bonus = $total_bonus;
+        $payroll->total_deduction = $total_deduction;
+        $payroll->net_pay = $net_pay;
+
+        
+
+        $payroll->save();
+
+        // Alert::success('Success!', 'New Item Inserted Successfully.');
+
+        return redirect()->route('payrolls.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $payroll = Payroll::find($id);
+
+        $payroll->delete();
+
+        $status = 3;
+        return redirect()->route('payrolls.index')->with('status',$status);
+    }
+
+    public function getSalary($id)
+    {
+        // $overtime_hour = Overtime::select('overtime_hour')->where('id', $salary->employee_id)->get();
+        // $overtime_hour = Overtime::select('overtime_hour')->where('id', $salary->employee_id)->get();
+        // $overtime = Overtime::find($salary->employee_id);
+        // return response()->json(array(
+        //     'salary' => $id,
+        // ));
+
+
+        $salary = Salary::where('employee_id', $id)->get();
+        return response()->json(array(
+            'salary' => $salary,
+        ));
+        // return view('backend.salaries.edit',compact('salary'));
+    }
+
+    public function getOvertime(Request $request,$id)
+    {
+        $date = explode("-", $request->date);
+        $month = $date[1];
+        $year = $date[0];
+        // return response()->json(array(
+        //     'id' => $request->id,
+        //     'date' => $request->date,
+        // ));
+        $basic_salary = Salary::select('basic_salary')
+                                    ->where('employee_id', $id)->get();
+        $overtime = Overtime::select('overtime_hour', 'overtime_rate')
+                                    ->where('employee_id', $request->id)
+                                    ->whereMonth('overtime_date', '=', $month)
+                                    ->whereYear('overtime_date', '=', $year)
+                                    ->get();
+        // $overtime_rate = Overtime::select('overtime_rate')
+        //                             ->where('employee_id', $request->id)
+        //                             ->whereMonth('overtime_date', '<', '10')
+        //                             ->whereYear('overtime_date', '=', '2019')
+        //                             ->get();
+        // $overtime = Overtime::find($salary->employee_id);
+        return response()->json(array(
+            'overtime' => $overtime,
+            'basic_salary' => $basic_salary,
+        ));
+
+
+        // $salary = Salary::where('employee_id', $id)->get();
+        // return response()->json(array(
+        //     'salary' => $salary,
+        // ));
+        // return view('backend.salaries.edit',compact('salary'));
+    }
+}

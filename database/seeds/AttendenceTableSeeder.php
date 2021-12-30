@@ -11,6 +11,6 @@ class AttendenceTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Attendence::class, 5)->create();
+        factory(\App\Attendance::class, 2)->create();
     }
 }
