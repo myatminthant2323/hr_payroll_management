@@ -26,7 +26,7 @@ class EmployeeController extends Controller
       $employees = Employee::all();
       $departments = Department::all();
       $designations = Designation::all();
-      return view('backend.employees.index',compact('departments','employees','designations','$roles'));
+      return view('backend.employees.index',compact('departments','employees','designations','roles'));
     }
 
     /**

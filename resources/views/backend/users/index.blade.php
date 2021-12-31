@@ -76,7 +76,7 @@
 											@else 
 												@foreach ($employees as $employee)
 													@if ($employee->user_id == $user->id)
-													<a href="{{route('employees.show',$employee->user_id)}}">
+													<a href="{{route('employees.show',$employee->id)}}">
 														<img src="{{$employee->photo}}" class="rounded-circle width35" alt="">
 													</a>
 													@endif
@@ -91,9 +91,13 @@
 												@if ($role == 'admin')
 													{{$user->name}}
 												@else
-													<a href="{{route('employees.show',$employee->user_id)}}" style="text-decoration: none; color: black;">
-														{{$user->name}}
-													</a>
+													@foreach ($employees as $employee)
+														@if ($employee->user_id == $user->id)
+															<a href="{{route('employees.show',$employee->id)}}" style="text-decoration: none; color: black;">
+																{{$user->name}}
+															</a>
+														@endif
+													@endforeach
 												@endif
 												@endforeach
 												</h6>

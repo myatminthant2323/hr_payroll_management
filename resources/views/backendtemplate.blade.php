@@ -310,13 +310,13 @@ session_start();
             <span>Welcome,</span>
             <a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown"><strong>{{ Auth::user()->name }}</strong></a>                    
             <ul class="dropdown-menu dropdown-menu-right account user-menu menu-icon animated flipInY">
-              @foreach (Auth::user()->roles()->get() as $role)
+              <!-- @foreach (Auth::user()->roles()->get() as $role)
               @if ($role->name == 'admin')
               <li><a href="{{route('employees.show',Auth::user())}}"><i class="icon-user btn-theme-link"></i>My Profile</a></li>
               @else
               <li><a href="{{route('employees.show',Auth::user())}}"><i class="icon-user btn-theme-link"></i>My Profile</a></li>
               @endif
-              @endforeach
+              @endforeach -->
               
               <li><a href="app-inbox.html"><i class="icon-envelope-open btn-theme-link"></i>Messages</a></li>
               <li><a href="javascript:void(0);"><i class="icon-settings btn-theme-link"></i>Settings</a></li>
